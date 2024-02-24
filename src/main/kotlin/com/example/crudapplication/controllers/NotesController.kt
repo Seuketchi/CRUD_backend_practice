@@ -6,36 +6,23 @@ import com.example.crudapplication.service.NotesService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.RestController
-
-import java.util.ArrayList
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/")
 class NotesController @Autowired constructor(
-        private val noteService: NotesService
+    private val noteService: NotesService
 
-){
+) {
 
     @GetMapping("notes")
-    fun getListOfNotes(): ResponseEntity<List<Notes>> {
-        val notes = ArrayList<Notes>()
-        notes.add(Notes(1, "Title", "content"))
-        notes.add(Notes(2, "Title2", "content2"))
-        return ResponseEntity.ok(notes);
+    fun getListOfNotes(): ResponseEntity<List<NotesDTO>> {
+        return ResponseEntity(noteService.getAllNotes(), HttpStatus.OK)
     }
 
     @GetMapping("notes/{id}")
-    fun getNote(@PathVariable id: Long): Notes {
-        return Notes(id, "Title", "content")
+    fun getNote(@PathVariable id: Long): ResponseEntity<NotesDTO> {
+        return ResponseEntity(noteService.getNoteByID(id), HttpStatus.OK)
     }
 
     @PostMapping("notes/create")
@@ -52,8 +39,7 @@ class NotesController @Autowired constructor(
     }
 
     @DeleteMapping("notes/{id}/delete")
-    fun deleteNote(@PathVariable("id") notesId: Long):ResponseEntity<String> {
-        println(notesId)
-        return ResponseEntity.ok("Pokemon deleted successfully")
+    fun deleteNote(@PathVariable("id") notesId: Long): ResponseEntity<Unit> {
+        return ResponseEntity(noteService.deleteNoteByID(notesId), HttpStatus.OK)
     }
 }
