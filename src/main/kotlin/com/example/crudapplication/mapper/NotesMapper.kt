@@ -11,4 +11,5 @@ interface NotesMapper {
     fun mapToDTO(notesDTO: Notes) : NotesDTO // Converting from Notes to NotesDTO
     @Mapping(target = "id", source = "id")
     fun mapToModel(notes: NotesDTO) : Notes // Converting from NotesDTO to Notes
+
 }

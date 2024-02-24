@@ -1,6 +1,7 @@
 package com.example.crudapplication.controllers
 
 import com.example.crudapplication.dto.NotesDTO
+import com.example.crudapplication.dto.NotesResponse
 import com.example.crudapplication.service.NotesService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -15,8 +16,11 @@ class NotesController @Autowired constructor(
 ) {
 
     @GetMapping("notes")
-    fun getListOfNotes(): ResponseEntity<List<NotesDTO>> {
-        return ResponseEntity(noteService.getAllNotes(), HttpStatus.OK)
+    fun getListOfNotes(
+        @RequestParam(value = "pageNo", defaultValue = "0", required = false) pageNo: Int,
+        @RequestParam(value = "pageSize", defaultValue = "10", required = false) pageSize: Int
+    ): ResponseEntity<NotesResponse> {
+        return ResponseEntity(noteService.getAllNotes(pageNo, pageSize), HttpStatus.OK)
     }
 
     @GetMapping("notes/{id}")
@@ -29,16 +33,6 @@ class NotesController @Autowired constructor(
     fun createNote(@RequestBody notesDTO: NotesDTO): ResponseEntity<NotesDTO> {
         return ResponseEntity(noteService.createNotes(notesDTO), HttpStatus.CREATED)
     }
-
-//    @PutMapping("notes/{id}/update/title")
-//    fun updateNoteTitle(@RequestBody note: NotesDTO, @PathVariable("id") notesId: Long): ResponseEntity<NotesDTO> {
-//        return ResponseEntity(noteService.updateNoteTitleByID(notesId, note), HttpStatus.OK)
-//    }
-//
-//    @PutMapping("notes/{id}/update/content")
-//    fun updateNoteContent(@RequestBody note: NotesDTO, @PathVariable("id") notesId: Long): ResponseEntity<NotesDTO> {
-//        return ResponseEntity(noteService.updateNoteContentByID(notesId, note), HttpStatus.OK)
-//    }
 
     @PutMapping("notes/{id}/update")
     fun updateNote(@RequestBody note: NotesDTO, @PathVariable("id") notesId: Long): ResponseEntity<NotesDTO> {
