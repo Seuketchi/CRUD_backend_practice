@@ -1,6 +1,7 @@
 package com.example.crudapplication.service.impl
 
 import com.example.crudapplication.dto.NotesDTO
+import com.example.crudapplication.exceptions.NoteNotFoundException
 import com.example.crudapplication.mapper.NotesMapper
 import com.example.crudapplication.model.Notes
 import com.example.crudapplication.repository.NotesRepository
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service
 @Service
 class NotesServiceImpl @Autowired constructor(
     private val notesRepository: NotesRepository,
-    private val notesMapper: NotesMapper
+    private val notesMapper: NotesMapper,
 ) : NotesService {
     override fun createNotes(notesDTO: NotesDTO): NotesDTO {
         val note = Notes(
@@ -37,8 +38,8 @@ class NotesServiceImpl @Autowired constructor(
     }
 
     override fun getNoteByID(id: Long): NotesDTO {
-        notesRepository.findById(id).let {
-            return notesMapper.mapToDTO(it.get())
+        notesRepository.findById(id).orElseThrow { NoteNotFoundException("Note with id $id not found") }.let {
+            return notesMapper.mapToDTO(it)
         }
     }
 
@@ -47,6 +48,11 @@ class NotesServiceImpl @Autowired constructor(
     }
 
     override fun updateNoteByID(id: Long, notesDTO: NotesDTO): NotesDTO {
-        TODO("Not yet implemented")
+        notesRepository.findById(id).orElseThrow { NoteNotFoundException("Note with id $id not found") }.let {
+            it.title = notesDTO.title
+            it.content = notesDTO.content
+            notesRepository.save(it)
+            return notesMapper.mapToDTO(it)
+        }
     }
 }

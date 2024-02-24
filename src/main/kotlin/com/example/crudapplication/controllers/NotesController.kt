@@ -1,7 +1,6 @@
 package com.example.crudapplication.controllers
 
 import com.example.crudapplication.dto.NotesDTO
-import com.example.crudapplication.model.Notes
 import com.example.crudapplication.service.NotesService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -31,11 +30,19 @@ class NotesController @Autowired constructor(
         return ResponseEntity(noteService.createNotes(notesDTO), HttpStatus.CREATED)
     }
 
+//    @PutMapping("notes/{id}/update/title")
+//    fun updateNoteTitle(@RequestBody note: NotesDTO, @PathVariable("id") notesId: Long): ResponseEntity<NotesDTO> {
+//        return ResponseEntity(noteService.updateNoteTitleByID(notesId, note), HttpStatus.OK)
+//    }
+//
+//    @PutMapping("notes/{id}/update/content")
+//    fun updateNoteContent(@RequestBody note: NotesDTO, @PathVariable("id") notesId: Long): ResponseEntity<NotesDTO> {
+//        return ResponseEntity(noteService.updateNoteContentByID(notesId, note), HttpStatus.OK)
+//    }
+
     @PutMapping("notes/{id}/update")
-    fun updateNote(@RequestBody note: Notes, @PathVariable("id") notesId: Long): ResponseEntity<Notes> {
-        println(note.title)
-        println(note.content)
-        return ResponseEntity.ok(note)
+    fun updateNote(@RequestBody note: NotesDTO, @PathVariable("id") notesId: Long): ResponseEntity<NotesDTO> {
+        return ResponseEntity(noteService.updateNoteByID(notesId, note), HttpStatus.OK)
     }
 
     @DeleteMapping("notes/{id}/delete")

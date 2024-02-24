@@ -8,4 +8,5 @@ interface NotesService {
   fun getNoteByID(id : Long): NotesDTO
   fun deleteNoteByID(id : Long)
   fun updateNoteByID(id : Long, notesDTO: NotesDTO): NotesDTO
+
 }
